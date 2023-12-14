@@ -1,0 +1,8 @@
+{
+  "name": "DBorg Toolkit 1.0",
+  "id": "epiclabs",
+  "initials": "dt",
+  "outputImages": ["dborg"],
+  "registry": "",
+  "maxPushes": 7
+}
