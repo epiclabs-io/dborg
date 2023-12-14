@@ -1,0 +1,9 @@
+# Define the recursion root
+R /
+
+- re:^#recycle
+- re:^@eaDir
+- re:^.Trash-.*
+- re:.*/#recycle
+- re:.*/@eaDir
+- re:.*/.Trash-.*
