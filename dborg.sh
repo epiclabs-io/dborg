@@ -53,16 +53,6 @@ function get_media_mount_dir() {
     done
 }
 
-function check_docker_image_exists() {
-    local image_name=$1
-
-    if ! docker image inspect "$image_name" &>/dev/null; then
-        return 1
-    else
-        return 0
-    fi
-}
-
 function check_fuse_installed() {
     if ! dpkg -s fuse &>/dev/null; then
         echo "FUSE is not installed. Install FUSE first"
@@ -90,22 +80,12 @@ function print_usage() {
     echo "create <prefix> <local path> : Creates a backup archive of the given local path with a prefix"
     echo "shell [local_path] : opens a shell to run borg commands. If a local_path is given, it will be mapped from the host"
     echo "mount [mount point path] : mounts the backup repository in the given local path. If ommited, it will mount in /media/backup"
-    echo "build : rebuilds the synobackup docker image"
     echo "any other command is passed to borg in the container."
     echo ""
 }
 
 function run() {
     check_docker_installed_and_usable
-
-    if ! check_docker_image_exists "synobackup"; then
-        echo "Cannot find synobackup docker image. Will try to build it:"
-        command_build
-        if ! check_docker_image_exists "synobackup"; then
-            echo "Could not build synobackup docker image"
-            exit 1
-        fi
-    fi
 
     docker run --rm \
         --cap-add=NET_ADMIN \
@@ -116,7 +96,7 @@ function run() {
         -v $HERE/config:/config \
         -v $HERE/logs:/logs \
         -v cache:/root/.cache \
-        synobackup "$@"
+        epiclabs/dborg "$@"
 
 }
 
